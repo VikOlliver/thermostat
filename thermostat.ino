@@ -1,11 +1,19 @@
-//Sample using LiquidCrystal library
+// Thermostat and LCD from The Shed Magazine http://theshedmag.co.nz
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
 
 /*******************************************************
-
-This program will test the LCD panel and the buttons
-Mark Bramwell, July 2010
+ A thermostat program with display and keyboard
+ Licenced under the GPLv3 or later.
+ (C)2015 vik@diamondage.co.nz
+ 
+ Uses a standard Arduino 1602 LCD, a heater drivign relay
+ on HEATER_PIN, a reay for fan or suchlike on COOLIN_PIN
+ and a 100K thermistor on THERMISTOR PIN, which is pulled
+ high via a 4K7 resistor. the other themistor pin is
+ grounded.
+ 
+(Hat tip to Mark Bramwell for the keyboard expertise)
 
 ********************************************************/
 
@@ -292,21 +300,21 @@ void loop()
   // State machine finished. Now we do all the things that must be done.
 
   // print the results to the serial monitor:
-  /*Serial.print("Sensor = " );                       
+  Serial.print("Sensor = " );                       
   Serial.print(analogRead(THERMISTOR_PIN));
   Serial.print("\tTemp = ");
   Serial.print(tempReading);
-  Serial.println("C");*/
+  Serial.println("C");
   
   digitalWrite(HEATER_PIN,heating?1:0);
   digitalWrite(COOLING_PIN,cooling?1:0);
-  // Pause to stop power fluctuations annoying thermocouple.
+  // Pause to stop power fluctuations annoying thermistor.
   if (lastHeating!=heating) {
     delay(300);
     lastHeating=heating;
     state=ST_TEMP_CHANGED;
   }
-  // Pause to stop power fluctuations annoying thermocouple.
+  // Pause to stop power fluctuations annoying thermistor.
   if (lastCooling!=cooling) {
     delay(300);
     lastCooling=cooling;
@@ -314,4 +322,3 @@ void loop()
   }
 
 }
-
